@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lovely Connections — Mental Well-Being & Life Transformation Coaching</title>
+    <meta name="description" content="Transform your stressful life into a balanced, peaceful existence with Coach Danielle Jones. Premium mental well-being and life transformation coaching program.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        sage: { 50: '#f4f7f4', 100: '#e3ebe2', 200: '#c5d8c3', 300: '#9ebf9b', 400: '#76a172', 500: '#4A7043', 600: '#3d5a37', 700: '#32482e', 800: '#2a3a27', 900: '#233022' },
+                        cream: { 50: '#fdfcfa', 100: '#F5F0E6', 200: '#ede5d4', 300: '#e0d4bc', 400: '#d0bf9e', 500: '#c4ad88', 600: '#b89d72', 700: '#997d5b', 800: '#7d664d', 900: '#665441' },
+                        lavender: { 50: '#f8f6fb', 100: '#f0ebf7', 200: '#e3d9f0', 300: '#cdbce4', 400: '#B8A1D9', 500: '#a085cc', 600: '#8c6abc', 700: '#7a56a8', 800: '#66498c', 900: '#543d73' },
+                        navy: { 50: '#f0f1f3', 100: '#d9dce2', 200: '#b3b9c5', 300: '#8d96a9', 400: '#67738c', 500: '#4a5568', 600: '#3a4454', 700: '#2d3644', 800: '#1E293B', 900: '#151d2a' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+        }
+        .carousel-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            padding: 0 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .carousel-slide { flex: 0 0 50%; }
+        }
+        @media (min-width: 1024px) {
+            .carousel-slide { flex: 0 0 33.333%; }
+        }
+        .hero-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+        @media (max-width: 768px) {
+            .hero-bg { background-attachment: scroll; }
+        }
+        .bg-gradient-warm {
+            background: linear-gradient(135deg, #F5F0E6 0%, #f4f7f4 50%, #f0ebf7 100%);
+        }
+        .dark .bg-gradient-warm {
+            background: linear-gradient(135deg, #1a1f2e 0%, #1e293b 50%, #2d3644 100%);
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F5F0E6; }
+        .dark ::-webkit-scrollbar-track { background: #1E293B; }
+        ::-webkit-scrollbar-thumb { background: #4A7043; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3d5a37; }
+        #progressBar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4A7043, #B8A1D9);
+            z-index: 9999;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+        .modal-backdrop {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+        *:focus-visible {
+            outline: 2px solid #4A7043;
+            outline-offset: 2px;
+        }
+        .dark *:focus-visible {
+            outline-color: #B8A1D9;
+        }
+    </style>
+    <!-- Email is now handled by your backend (Gmail SMTP) — see /signup and
+         /payment-submitted calls further down. EmailJS is no longer used. -->
+</head>
+<body class="font-sans text-navy-800 bg-cream-50 antialiased dark:bg-navy-900 dark:text-cream-100 transition-colors duration-300">
+
+    <div id="progressBar" aria-hidden="true"></div>
+
+    <button id="scrollToTop" aria-label="Scroll to top" class="fixed bottom-6 right-6 z-50 bg-sage-500 text-white p-3 rounded-full shadow-lg opacity-0 translate-y-10 transition-all duration-300 hover:bg-sage-600 focus:outline-none focus:ring-2 focus:ring-lavender-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+    </button>
+
+    <nav id="navbar" class="fixed top-0 w-full z-40 transition-all duration-300 bg-cream-50/90 dark:bg-navy-900/90 backdrop-blur-md border-b border-sage-200/50 dark:border-navy-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="#" class="flex items-center gap-2 group" aria-label="Lovely Connections Home">
+    <!-- Replace the old <div> with this <img> tag -->
+    <img 
+        src="Assets/Web Logo.png" 
+        alt="Lovely Connections Logo" 
+        class="w-10 h-10 rounded-full object-cover shadow-md group-hover:shadow-lg transition-shadow"
+    />
+    <span class="text-xl font-semibold text-navy-800 dark:text-cream-100 tracking-tight">Lovely Connections</span>
+</a>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="text-sm font-medium text-navy-600 dark:text-cream-300 hover:text-sage-600 dark:hover:text-sage-300 transition-colors">Home</a>
+                    <a href="#about" class="text-sm font-medium text-navy-600 dark:text-cream-300 hover:text-sage-600 dark:hover:text-sage-300 transition-colors">About</a>
+                    <a href="#program" class="text-sm font-medium text-navy-600 dark:text-cream-300 hover:text-sage-600 dark:hover:text-sage-300 transition-colors">The Program</a>
+                    <a href="#transformations" class="text-sm font-medium text-navy-600 dark:text-cream-300 hover:text-sage-600 dark:hover:text-sage-300 transition-colors">Transformations</a>
+                    <a href="#resources" class="text-sm font-medium text-navy-600 dark:text-cream-300 hover:text-sage-600 dark:hover:text-sage-300 transition-colors">Resources</a>
+                    <a href="#contact" class="text-sm font-medium text-navy-600 dark:text-cream-300 hover:text-sage-600 dark:hover:text-sage-300 transition-colors">Contact</a>
+                </div>
+                <div class="hidden md:flex items-center gap-4">
+                    <button id="darkModeToggle" aria-label="Toggle dark mode" class="p-2 rounded-full hover:bg-sage-100 dark:hover:bg-navy-800 transition-colors">
+                        <svg id="sunIcon" class="w-5 h-5 text-amber-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg id="moonIcon" class="w-5 h-5 text-lavender-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <a href="#contact" class="bg-sage-500 hover:bg-sage-600 text-white px-5 py-2.5 rounded-full text-sm font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">Book Discovery Call</a>
+                </div>
+                <button id="mobileMenuBtn" aria-label="Open menu" aria-expanded="false" class="md:hidden p-2 rounded-lg hover:bg-sage-100 dark:hover:bg-navy-800 transition-colors">
+                    <svg class="w-6 h-6 text-navy-800 dark:text-cream-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden bg-cream-100 dark:bg-navy-800 border-t border-sage-200 dark:border-navy-700">
+            <div class="px-4 py-4 space-y-3">
+                <a href="#home" class="block px-3 py-2 rounded-lg text-navy-700 dark:text-cream-200 hover:bg-sage-200 dark:hover:bg-navy-700 transition-colors">Home</a>
+                <a href="#about" class="block px-3 py-2 rounded-lg text-navy-700 dark:text-cream-200 hover:bg-sage-200 dark:hover:bg-navy-700 transition-colors">About</a>
+                <a href="#program" class="block px-3 py-2 rounded-lg text-navy-700 dark:text-cream-200 hover:bg-sage-200 dark:hover:bg-navy-700 transition-colors">The Program</a>
+                <a href="#transformations" class="block px-3 py-2 rounded-lg text-navy-700 dark:text-cream-200 hover:bg-sage-200 dark:hover:bg-navy-700 transition-colors">Transformations</a>
+                <a href="#resources" class="block px-3 py-2 rounded-lg text-navy-700 dark:text-cream-200 hover:bg-sage-200 dark:hover:bg-navy-700 transition-colors">Resources</a>
+                <a href="#contact" class="block px-3 py-2 rounded-lg text-navy-700 dark:text-cream-200 hover:bg-sage-200 dark:hover:bg-navy-700 transition-colors">Contact</a>
+                <div class="pt-2 border-t border-sage-200 dark:border-navy-700 flex items-center justify-between">
+                    <button id="mobileDarkModeToggle" aria-label="Toggle dark mode" class="flex items-center gap-2 px-3 py-2 text-navy-700 dark:text-cream-200">
+                        <span>Dark Mode</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+                <a href="#contact" class="block text-center bg-sage-500 text-white px-5 py-3 rounded-full font-medium">Book Discovery Call</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="relative min-h-screen flex items-center justify-center hero-bg" style="background-image: url('https://images.unsplash.com/photo-1456410143611-49b35e0611b4?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');" aria-label="Hero section">
+        <div class="absolute inset-0 bg-gradient-to-b from-navy-900/40 via-navy-900/30 to-navy-900/60"></div>
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-20">
+            <div class="fade-in-up">
+                <span class="inline-block px-4 py-1.5 mb-6 text-sm font-medium tracking-wider text-cream-100 bg-sage-500/80 backdrop-blur-sm rounded-full uppercase">Mental Well-Being & Life Transformation</span>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 drop-shadow-lg">
+                    Transform Your Stressful and Busy Life into A Balanced Life That Feels Good Effortlessly
+                </h1>
+                <p class="text-lg sm:text-xl md:text-2xl text-cream-100/90 max-w-3xl mx-auto mb-10 font-light leading-relaxed">
+                    Discover peace, purpose, and balance — one intentional step at a time.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="#contact" class="bg-sage-500 hover:bg-sage-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 w-full sm:w-auto text-center">
+                        Start Your Transformation
+                    </a>
+                    <a href="#program" class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/40 px-8 py-4 rounded-full text-lg font-semibold transition-all w-full sm:w-auto text-center">
+                        Explore The Program
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <section id="pain-points" class="py-20 md:py-28 bg-gradient-warm" aria-labelledby="pain-points-heading">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <span class="text-sage-600 dark:text-sage-400 font-medium text-sm uppercase tracking-wider">Current State</span>
+                <h2 id="pain-points-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-800 dark:text-cream-50 mt-3 mb-4">Does This Sound Familiar?</h2>
+                <p class="text-lg text-navy-600 dark:text-cream-300 max-w-2xl mx-auto">You are not alone. These are the most common challenges my clients face before we begin our work together.</p>
+            </div>
+            <div class="carousel-container fade-in-up" id="painPointsCarousel" role="region" aria-label="Pain points carousel">
+                <div class="carousel-track" id="painPointsTrack"></div>
+                <button class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 bg-white dark:bg-navy-800 shadow-lg rounded-full p-3 hover:bg-sage-50 dark:hover:bg-navy-700 transition-colors z-10" id="painPointsPrev" aria-label="Previous pain point">
+                    <svg class="w-5 h-5 text-navy-700 dark:text-cream-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 bg-white dark:bg-navy-800 shadow-lg rounded-full p-3 hover:bg-sage-50 dark:hover:bg-navy-700 transition-colors z-10" id="painPointsNext" aria-label="Next pain point">
+                    <svg class="w-5 h-5 text-navy-700 dark:text-cream-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+            <div class="flex justify-center gap-2 mt-8" id="painPointsDots" role="tablist"></div>
+        </div>
+    </section>
+
+    <section id="program" class="py-20 md:py-28 bg-white dark:bg-navy-800" aria-labelledby="program-heading">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <span class="text-sage-600 dark:text-sage-400 font-medium text-sm uppercase tracking-wider">The Program</span>
+                <h2 id="program-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-800 dark:text-cream-50 mt-3 mb-4">8-Step Transformation Blueprint</h2>
+                <p class="text-lg text-navy-600 dark:text-cream-300 max-w-2xl mx-auto">A proven, step-by-step framework to guide you from where you are to where you want to be.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8" id="stepsGrid"></div>
+        </div>
+    </section>
+
+    <section id="transformations" class="py-20 md:py-28 bg-gradient-warm relative overflow-hidden" aria-labelledby="transformations-heading">
+
+        <div class="absolute inset-0 opacity-30 dark:opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-sage-300/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-lavender-300/30 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="fade-in-up">
+                    <span class="text-sage-600 dark:text-sage-400 font-medium text-sm uppercase tracking-wider">The Transformation</span>
+                    <h2 id="transformations-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-800 dark:text-cream-50 mt-3 mb-6">The Transformation You Will Experience</h2>
+                    <p class="text-lg text-navy-600 dark:text-cream-300 mb-8 leading-relaxed">The Transformation You will Experience
+Imagine waking up with clarity instead of confusion, confidence instead of self-doubt, and peace instead of constant stress.
+
+Imagine having healthy boundaries without guilt, balancing your career and family without feeling overwhelmed, staying focused on what matters most, and building meaningful relationships that support your growth.
+
+This isn't about temporary motivation. It's about creating lasting transformation through practical strategies, intentional habits, personal accountability, and a supportive community.
+</p>
+                    <ul class="space-y-4" id="transformationList"></ul>
+                </div>
+                <div class="fade-in-up relative">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80" alt="Woman practicing meditation in a serene natural setting at sunrise" class="w-full h-[500px] object-cover" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900/50 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 text-white">
+                            <p class="text-lg font-medium italic">"The peace you seek is already within you. Our work is simply to clear the path."</p>
+                            <p class="text-sm mt-2 opacity-90">— Coach Danielle Jones</p>
+                        </div>
+                    </div>
+                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-lavender-400/20 rounded-full blur-xl"></div>
+                    <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-sage-400/20 rounded-full blur-xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 md:py-28 bg-white dark:bg-navy-900" aria-labelledby="about-heading">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="order-2 lg:order-1 fade-in-up relative">
+                    <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="Assets/MeetCoach.jpeg" alt="Coach Danielle Jones, a professional and approachable woman in a calm natural setting" class="w-full h-[600px] object-cover" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-navy-900/60 via-transparent to-transparent"></div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-sage-500 text-white p-6 rounded-2xl shadow-xl max-w-xs hidden md:block">
+                        <p class="text-3xl font-bold">10+</p>
+                        <p class="text-sm opacity-90">Years of Coaching Experience</p>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2 fade-in-up">
+                    <span class="text-sage-600 dark:text-sage-400 font-medium text-sm uppercase tracking-wider">Your Guide</span>
+                    <h2 id="about-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-800 dark:text-cream-50 mt-3 mb-6">Meet Your Coach</h2>
+                    <h3 class="text-2xl font-semibold text-sage-600 dark:text-sage-400 mb-4">Danielle Jones</h3>
+                    <div class="prose dark:prose-invert text-navy-600 dark:text-cream-300 leading-relaxed space-y-4">
+                        <p>Danielle Jones is a certified Mental Well-Being & Life Transformation Coach dedicated to helping busy professionals and overwhelmed individuals reclaim their peace, purpose, and personal power. With over a decade of experience in holistic coaching, Danielle has guided hundreds of clients through profound personal transformations.</p>
+                        <p>Her approach blends evidence-based psychology with mindful, heart-centered practices. She believes that true transformation happens not through force or willpower alone, but through gentle, consistent alignment with your deepest values and authentic self.</p>
+                        <p>Before becoming a coach, Danielle spent years in high-pressure corporate environments, which gives her a unique understanding of the stress, burnout, and imbalance her clients face. Her own journey from overwhelm to inner peace inspired her to create the Lovely Connections coaching program, a sanctuary for those ready to transform their lives from the inside out.</p>
+                        <p>Danielle holds certifications in Life Coaching, Mindfulness-Based Stress Reduction (MBSR), and Cognitive Behavioral Coaching. She is a member of the International Coach Federation and regularly participates in continuing education to bring the most effective, compassionate techniques to her clients.</p>
+                        <p>When she is not coaching, Danielle enjoys hiking in nature, practicing yoga, reading poetry, and spending quality time with her family.</p>
+                    </div>
+                    <div class="mt-8 flex flex-wrap gap-4">
+                        <a href="#contact" class="bg-sage-500 hover:bg-sage-600 text-white px-6 py-3 rounded-full font-medium transition-all shadow-md hover:shadow-lg">Work With Me</a>
+                        <a href="#resources" class="border-2 border-sage-500 text-sage-600 dark:text-sage-400 hover:bg-sage-50 dark:hover:bg-navy-800 px-6 py-3 rounded-full font-medium transition-all">Free Resources</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="py-20 md:py-28 bg-cream-100 dark:bg-navy-800" aria-labelledby="testimonials-heading">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <span class="text-sage-600 dark:text-sage-400 font-medium text-sm uppercase tracking-wider">Success Stories</span>
+                <h2 id="testimonials-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-800 dark:text-cream-50 mt-3 mb-4">Transformations in Their Words</h2>
+            </div>
+            <div class="carousel-container fade-in-up" id="testimonialsCarousel" role="region" aria-label="Testimonials carousel">
+                <div class="carousel-track" id="testimonialsTrack"></div>
+                <button class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 bg-white dark:bg-navy-700 shadow-lg rounded-full p-3 hover:bg-sage-50 dark:hover:bg-navy-600 transition-colors z-10" id="testimonialsPrev" aria-label="Previous testimonial">
+                    <svg class="w-5 h-5 text-navy-700 dark:text-cream-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 bg-white dark:bg-navy-700 shadow-lg rounded-full p-3 hover:bg-sage-50 dark:hover:bg-navy-600 transition-colors z-10" id="testimonialsNext" aria-label="Next testimonial">
+                    <svg class="w-5 h-5 text-navy-700 dark:text-cream-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+            <div class="flex justify-center gap-2 mt-8" id="testimonialsDots"></div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 md:py-28 bg-gradient-warm relative" aria-labelledby="contact-heading">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in-up">
+                <span class="text-sage-600 dark:text-sage-400 font-medium text-sm uppercase tracking-wider">Begin Your Journey</span>
+                <h2 id="contact-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-800 dark:text-cream-50 mt-3 mb-4">Book Your Discovery Call</h2>
+                <p class="text-lg text-navy-600 dark:text-cream-300">Take the first step toward a balanced, peaceful life. Fill out the form below and I will reach out within 24 hours.</p>
+            </div>
+            <div class="bg-white dark:bg-navy-800 rounded-3xl shadow-xl p-8 md:p-12 fade-in-up">
+                <form id="contactForm" class="space-y-6" novalidate>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="fullName" class="block text-sm font-medium text-navy-700 dark:text-cream-200 mb-2">Full Name <span class="text-red-500">*</span></label>
+                            <input type="text" id="fullName" name="fullName" required class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-navy-600 bg-cream-50 dark:bg-navy-700 text-navy-800 dark:text-cream-100 focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all" placeholder="Your full name">
+                            <p class="text-red-500 text-sm mt-1 hidden" id="fullNameError">Please enter your full name.</p>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-navy-700 dark:text-cream-200 mb-2">Email Address <span class="text-red-500">*</span></label>
+                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-navy-600 bg-cream-50 dark:bg-navy-700 text-navy-800 dark:text-cream-100 focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all" placeholder="you@example.com">
+                            <p class="text-red-500 text-sm mt-1 hidden" id="emailError">Please enter a valid email address.</p>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-navy-700 dark:text-cream-200 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-navy-600 bg-cream-50 dark:bg-navy-700 text-navy-800 dark:text-cream-100 focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all" placeholder="(555) 123-4567">
+                        </div>
+                        <div>
+                            <label for="challenge" class="block text-sm font-medium text-navy-700 dark:text-cream-200 mb-2">Primary Challenge <span class="text-red-500">*</span></label>
+                            <select id="challenge" name="challenge" required class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-navy-600 bg-cream-50 dark:bg-navy-700 text-navy-800 dark:text-cream-100 focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all">
+                                <option value="">Select your primary challenge...</option>
+                                <option value="stress">Stress & Burnout</option>
+                                <option value="balance">Unbalanced Work & Family Life</option>
+                                <option value="anxiety">Social Anxiety</option>
+                                <option value="self-doubt">Self-Doubt & Imposter Syndrome</option>
+                                <option value="negative-thoughts">Overwhelming Negative Thoughts</option>
+                                <option value="purpose">Lack of Purpose & Direction</option>
+                                <option value="boundaries">Difficulty Setting Boundaries</option>
+                                <option value="relationships">Strained Relationships</option>
+                                <option value="sleep">Poor Sleep & Low Energy</option>
+                                <option value="emotional-eating">Emotional Eating or Avoidance</option>
+                                <option value="other">Something Else</option>
+                            </select>
+                            <p class="text-red-500 text-sm mt-1 hidden" id="challengeError">Please select a primary challenge.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-navy-700 dark:text-cream-200 mb-2">Your Message</label>
+                        <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 rounded-xl border border-sage-200 dark:border-navy-600 bg-cream-50 dark:bg-navy-700 text-navy-800 dark:text-cream-100 focus:ring-2 focus:ring-sage-400 focus:border-transparent transition-all resize-none" placeholder="Tell me a little about what you are going through and what you hope to achieve..."></textarea>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="termsCheckbox" name="termsCheckbox" class="mt-1 w-5 h-5 rounded border-sage-300 text-sage-500 focus:ring-sage-400 cursor-pointer">
+                        <label for="termsCheckbox" class="text-sm text-navy-600 dark:text-cream-300 leading-relaxed">
+                            I have read and agree to the <a href="terms.html" target="_blank" class="text-sage-600 dark:text-sage-400 underline hover:text-sage-700 dark:hover:text-sage-300">Terms of Service & Coaching Agreement</a>. <span class="text-red-500">*</span>
+                        </label>
+                    </div>
+                    <p class="text-red-500 text-sm hidden" id="termsError">You must agree to the Terms of Service to proceed.</p>
+                    <button type="submit" id="submitBtn" disabled class="w-full bg-sage-500 disabled:bg-sage-300 disabled:cursor-not-allowed hover:bg-sage-600 text-white font-semibold py-4 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        Book My Discovery Call
+                    </button>
+                    <div id="formSuccess" class="hidden bg-sage-100 dark:bg-sage-900/30 border border-sage-300 dark:border-sage-700 text-sage-800 dark:text-sage-200 rounded-xl p-4 text-center">
+                        <svg class="w-8 h-8 mx-auto mb-2 text-sage-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="font-medium">Thank you! Your request has been received.</p>
+                        <p class="text-sm mt-1">I will contact you within 24 hours to schedule your discovery call.</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="resources" class="py-20 md:py-28 bg-white dark:bg-navy-900" aria-labelledby="faq-heading">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <span class="text-sage-600 dark:text-sage-400 font-medium text-sm uppercase tracking-wider">Resources</span>
+                <h2 id="faq-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold text-navy-800 dark:text-cream-50 mt-3 mb-4">Frequently Asked Questions</h2>
+            </div>
+            <div class="space-y-4" id="faqContainer"></div>
+        </div>
+    </section>
+
+    <footer class="bg-navy-800 dark:bg-navy-950 text-cream-200 py-16" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-full bg-sage-500 flex items-center justify-center text-white font-bold text-sm">LC</div>
+                        <span class="text-lg font-semibold text-cream-100">Lovely Connections</span>
+                    </div>
+                    <p class="text-cream-400 text-sm leading-relaxed">Premium mental well-being and life transformation coaching for those ready to live with peace, purpose, and balance.</p>
+                </div>
+                <div>
+                    <h4 class="text-cream-100 font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#home" class="text-cream-400 hover:text-sage-400 transition-colors">Home</a></li>
+                        <li><a href="#about" class="text-cream-400 hover:text-sage-400 transition-colors">About</a></li>
+                        <li><a href="#program" class="text-cream-400 hover:text-sage-400 transition-colors">The Program</a></li>
+                        <li><a href="#transformations" class="text-cream-400 hover:text-sage-400 transition-colors">Transformations</a></li>
+                        <li><a href="#contact" class="text-cream-400 hover:text-sage-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-cream-100 font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm text-cream-400">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                            devotedcreators@gmail.com
+                        </li>
+                      
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-cream-100 font-semibold mb-4">Follow Along</h4>
+                    <div class="flex gap-4">
+                        <a href="https://www.instagram.com/lovely_connection_s?igsh=MWtsbGczeTZ2bzF5cA==" aria-label="Instagram" class="w-10 h-10 rounded-full bg-navy-700 hover:bg-sage-500 flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/danielle.jones.5245961" class="w-10 h-10 rounded-full bg-navy-700 hover:bg-sage-500 flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="https://youtube.com/@lovelyconnections9234?si=ACHfZPqMC1ww5qw4" class="w-10 h-10 rounded-full bg-navy-700 hover:bg-sage-500 flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 9l5 3-5 3V9z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-navy-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-cream-500 text-sm">&copy; Lovely Connections. All rights reserved.</p>
+                <div class="flex gap-6 text-sm text-cream-500">
+                    <a href="terms.html" class="hover:text-cream-300 transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-cream-300 transition-colors">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="painPointModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-backdrop absolute inset-0" id="modalBackdrop"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-navy-800 rounded-2xl shadow-2xl max-w-lg w-full p-8 relative transform transition-all scale-95 opacity-0" id="modalContent">
+                <button id="modalClose" aria-label="Close modal" class="absolute top-4 right-4 p-2 rounded-full hover:bg-sage-100 dark:hover:bg-navy-700 transition-colors">
+                    <svg class="w-5 h-5 text-navy-600 dark:text-cream-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <h3 id="modalTitle" class="text-2xl font-bold text-navy-800 dark:text-cream-50 mb-4 pr-8"></h3>
+                <div id="modalBody" class="text-navy-600 dark:text-cream-300 leading-relaxed"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const painPoints = [
+            { title: "Stress & Burnout", excerpt: "Feeling constantly overwhelmed, exhausted, and running on empty no matter how much rest you get.", full: "You wake up already tired. Your to-do list feels endless, and even small tasks drain your energy. Burnout is not just about being busy, it is about feeling emotionally depleted, mentally foggy, and physically worn down. You may find yourself irritable, unable to focus, and losing interest in things you once enjoyed. This is your body and mind signaling that something needs to change." },
+            { title: "Unbalanced Work & Family Life", excerpt: "Struggling to juggle career demands with meaningful time for family and yourself.", full: "Your work bleeds into your evenings and weekends. Even when you are physically present with loved ones, your mind is elsewhere — answering emails, worrying about deadlines, or mentally rehearsing tomorrow's meetings. You feel guilty for not being fully present, yet trapped by the demands of your career. The boundaries between work and life have dissolved, leaving little room for joy, connection, or rest." },
+            { title: "Social Anxiety", excerpt: "Avoiding social situations, feeling judged, or struggling to connect authentically with others.", full: "Social gatherings that once felt manageable now trigger intense worry. You overthink conversations, replay interactions in your head, and often cancel plans to avoid the discomfort. Deep down, you crave connection, but fear of judgment, rejection, or saying the wrong thing keeps you isolated. This loneliness loop only reinforces the belief that something is wrong with you — when in reality, your nervous system simply needs gentle recalibration." },
+            { title: "Self-Doubt & Imposter Syndrome", excerpt: "Feeling like a fraud despite your achievements, constantly questioning your worth and abilities.", full: "You have accomplished a lot, yet you cannot internalize your success. You attribute achievements to luck, timing, or others' help rather than your own competence. Every new challenge is met with the fear of being exposed as inadequate. This persistent self-doubt erodes confidence, limits risk-taking, and keeps you playing small — even when you are capable of so much more." },
+            { title: "Overwhelming Negative Thoughts", excerpt: "Caught in a loop of worry, catastrophic thinking, and inner criticism that feels impossible to escape.", full: "Your mind feels like a runaway train, constantly generating worst-case scenarios, harsh self-criticism, and obsessive worry. You try to push the thoughts away, but they return stronger. This mental noise drains your energy, disrupts sleep, and makes it hard to enjoy the present moment. You are not broken — your mind has simply developed a habit of overprotection that no longer serves you." },
+            { title: "Lack of Purpose & Direction", excerpt: "Feeling lost, unfulfilled, and unsure of what you truly want from your life and career.", full: "You have checked all the boxes — education, career, relationships — yet something feels missing. You wonder if this is all there is. Days blur together, and you struggle to identify what genuinely excites you. This existential drift creates a subtle but persistent sadness, a sense that you are living someone else's life rather than your own." },
+            { title: "Difficulty Setting Boundaries", excerpt: "Saying yes when you mean no, overcommitting, and feeling resentful yet unable to stop.", full: "You are the reliable one — the person everyone counts on. But your generosity has become a prison. You say yes to requests that drain you, avoid difficult conversations, and prioritize others' comfort over your own needs. Over time, this pattern breeds resentment, exhaustion, and a loss of self-respect. Learning to set boundaries is not selfish; it is essential for healthy relationships." },
+            { title: "Strained Relationships", excerpt: "Conflict, disconnection, or feeling misunderstood by the people who matter most.", full: "Your relationships feel like sources of stress rather than support. Communication has broken down, intimacy has faded, and you find yourself either avoiding conflict or constantly arguing. You may feel unseen, unheard, or taken for granted. These patterns often stem from unmet needs, unresolved hurts, and protective walls that were built for survival but now block connection." },
+            { title: "Poor Sleep & Low Energy", excerpt: "Tossing and turning at night, waking up unrested, and dragging through your days.", full: "Sleep, which should restore you, has become another source of stress. You lie awake with racing thoughts, or you fall asleep only to wake at 3 AM unable to return to rest. During the day, you rely on caffeine and willpower to function. This chronic sleep deprivation affects your mood, memory, decision-making, and physical health — creating a vicious cycle that is hard to break alone." },
+            { title: "Emotional Eating or Avoidance", excerpt: "Using food, screens, or busyness to numb uncomfortable feelings rather than process them.", full: "When stress hits, you reach for comfort — food, social media, alcohol, or endless distractions. These coping mechanisms provide temporary relief but leave you feeling worse afterward. You may feel out of control, ashamed, or frustrated by your inability to stop. These behaviors are not weaknesses; they are attempts to self-soothe that can be replaced with healthier, more nourishing strategies." }
+        ];
+
+        const steps = [
+            { number: "01", title: "Transformation", description: "Real change starts with you. Discover how to shift your mindset, overcome limiting beliefs, and become the person capable of creating the life you truly want.", icon: "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" },
+            { number: "02", title: "Boundary Setting Blueprint", description: "Stop saying YES to everything and NO to yourself. Learn how to set healthy boundaries that protect your peace, your time, your energy, and your relationships, without feeling guilty.", icon: "M3 8V5a2 2 0 012-2h3M16 3h3a2 2 0 012 2v3M21 16v3a2 2 0 01-2 2h-3M8 21H5a2 2 0 01-2-2v-3" },
+            { number: "03", title: "Know Your Boundaries & Create Your Schedule", description: "Take back control of your life. Build a schedule that aligns with your priorities so you can succeed at work, be present with your family, and still make time for yourself.", icon: "M16 2v4M8 2v4M3 10h18M8 14h2M14 14h2M8 17h2" },
+            { number: "04", title: "Simple but Effective Techniques", description: "Learn practical tools you can use every day to reduce stress, overcome anxiety, improve focus, and stay emotionally grounded, even when life gets busy.", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
+            { number: "05", title: "Accountability System", description: "Transformation happens through consistent action. You'll develop a system that keeps you motivated, focused, and committed, even when challenges arise.", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" },
+            { number: "06", title: "Habit Installation Protocols & Strengthen Family Bonds", description: "Success isn't built on motivation alone, it's built on habits. Create powerful daily routines that support your goals while strengthening the relationships that matter most.", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" },
+            { number: "07", title: "Know Your Circles", description: "Your environment shapes your future. Learn how to identify the people who inspire your growth, recognize relationships that hold you back, and intentionally surround yourself with positive influences.", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+            { number: "08", title: "Building an Empowering Community", description: "You were never meant to do life alone. Become part of a community that encourages you, challenges you, celebrates your wins, and supports your journey every step of the way.", icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0" }
+        ];
+
+        const transformations = [
+            "Wake up feeling rested, energized, and genuinely excited about your day",
+            "Move through challenges with calm confidence instead of panic and overwhelm",
+            "Set boundaries with ease and communicate your needs without guilt",
+            "Experience deeper, more authentic connections in your relationships",
+            "Replace self-criticism with self-compassion and genuine self-acceptance",
+            "Make decisions aligned with your values rather than fear or obligation",
+            "Create a work-life rhythm that honors both your ambitions and your well-being",
+            "Trust yourself fully and show up authentically in every area of your life"
+        ];
+
+        const testimonials = [
+            { name: "Sarah M.", role: "Marketing Director", quote: "Before working with Danielle, I was on the verge of quitting my job and my marriage. Six months later, I have boundaries, energy, and joy I did not think were possible. This program changed everything." },
+            { name: "James T.", role: "Software Engineer", quote: "I was skeptical about coaching, but Danielle's approach is different — warm, practical, and deeply insightful. My anxiety has decreased by 80%, and I finally feel like myself again." },
+            { name: "Priya K.", role: "Healthcare Professional", quote: "As a nurse, I was burned out and numb. Danielle helped me reconnect with why I chose this career in the first place. I now have tools to protect my energy and serve from a full cup." },
+            { name: "Marcus L.", role: "Entrepreneur", quote: "The 8-step blueprint gave me a clear path from chaos to calm. My business is thriving, but more importantly, my relationships are thriving too. I am present, patient, and at peace." },
+            { name: "Elena R.", role: "Stay-at-Home Parent", quote: "I had lost myself in motherhood. Danielle gently guided me back to my own needs, dreams, and identity. I am a better parent now because I am finally taking care of myself too." }
+        ];
+
+        const faqs = [
+            { question: "How long does the program takes?", answer: "The program is an 8 weeks sessions which you’ll be provided with all the needed materials upon agreement." },
+            { question: "How does the program schedule works?", answer: "The program is a fully readily available materials tailored to serve people needing it. But there are appointments sessions per users request and Coach’s agreement and availability." },
+            { question: "Do you offer virtual or in person sessions?", answer: "Our program is based on virtual sessions not in person. But if there’s any need for in person in future, which will be communicated with the beneficiaries." },
+            { question: "What happens during a discovery call?", answer: "The discovery call is a complimentary 30-minute conversation where we get to know each other. I will ask about your current challenges, goals, and what you are hoping to achieve through coaching. You will have the opportunity to ask questions about my approach, the program structure, and logistics. There is no pressure to commit — it is simply a chance to explore if we are a good fit." },
+            { question: "HDoes your program has age preference or limit?", answer: "Our program is for anyone facing all the above issues as long as they can identify and understand what their issues are." },
+            { question: "What if I am not sure coaching is right for me?", answer: "That uncertainty is completely normal. The discovery call is designed specifically to help you determine if coaching is the right next step. There is no obligation, and I will be honest about whether I believe I can help you. If we are not the right fit, I am happy to provide referrals to other professionals or resources." },
+            { question: "Is your program available to everyone or specific people with specific issues?", answer: "Our program isn’t for everyone, but people who suffered from the listed issues on our program." },
+           /// { question: "What is your cancellation and refund policy?", answer: "I understand that life happens. Sessions can be rescheduled with at least 24 hours notice. For package commitments, refunds are handled on a case-by-case basis depending on circumstances and how much of the program has been completed. Full details are outlined in the Terms of Service & Coaching Agreement." }
+        ];
+
+        const painPointsTrack = document.getElementById('painPointsTrack');
+        painPoints.forEach((point, index) => {
+            const card = document.createElement('div');
+            card.className = 'carousel-slide';
+            card.innerHTML = `
+                <div class="bg-white dark:bg-navy-700 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all h-full cursor-pointer group border border-sage-100 dark:border-navy-600" onclick="openModal(${index})" tabindex="0" role="button" aria-label="Read more about ${point.title}">
+                    <div class="w-12 h-12 rounded-full bg-sage-100 dark:bg-sage-900/30 flex items-center justify-center mb-4 group-hover:bg-sage-200 dark:group-hover:bg-sage-800/50 transition-colors">
+                        <span class="text-sage-600 dark:text-sage-400 font-bold text-lg">${index + 1}</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-navy-800 dark:text-cream-50 mb-3">${point.title}</h3>
+                    <p class="text-navy-600 dark:text-cream-300 text-sm leading-relaxed mb-4">${point.excerpt}</p>
+                    <span class="text-sage-600 dark:text-sage-400 text-sm font-medium group-hover:underline">Read more →</span>
+                </div>
+            `;
+            painPointsTrack.appendChild(card);
+        });
+
+        const stepsGrid = document.getElementById('stepsGrid');
+        steps.forEach(step => {
+            const card = document.createElement('div');
+            card.className = 'bg-gradient-to-br from-sage-50 to-cream-50 dark:from-navy-700 dark:to-navy-800 rounded-2xl p-8 border border-sage-100 dark:border-navy-600 hover:border-sage-300 dark:hover:border-sage-600 transition-all group fade-in-up';
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-sage-500/10 dark:bg-sage-500/20 flex items-center justify-center text-sage-600 dark:text-sage-400 group-hover:bg-sage-500 group-hover:text-white transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${step.icon}"></path></svg>
+                    </div>
+                    <span class="text-3xl font-bold text-sage-200 dark:text-sage-800">${step.number}</span>
+                </div>
+                <h3 class="text-xl font-semibold text-navy-800 dark:text-cream-50 mb-3">${step.title}</h3>
+                <p class="text-navy-600 dark:text-cream-300 text-sm leading-relaxed">${step.description}</p>
+            `;
+            stepsGrid.appendChild(card);
+        });
+
+        const transformationList = document.getElementById('transformationList');
+        transformations.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'flex items-start gap-3';
+            li.innerHTML = `
+                <div class="w-6 h-6 rounded-full bg-sage-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-3.5 h-3.5 text-sage-600 dark:text-sage-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <span class="text-navy-700 dark:text-cream-200">${item}</span>
+            `;
+            transformationList.appendChild(li);
+        });
+
+        const testimonialsTrack = document.getElementById('testimonialsTrack');
+        testimonials.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'carousel-slide';
+            card.innerHTML = `
+                <div class="bg-white dark:bg-navy-700 rounded-2xl p-8 shadow-lg border border-sage-100 dark:border-navy-600 h-full flex flex-col">
+                    <svg class="w-8 h-8 text-lavender-400 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    <p class="text-navy-700 dark:text-cream-200 italic leading-relaxed flex-grow mb-6">"${t.quote}"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-sage-400 to-lavender-400 flex items-center justify-center text-white font-semibold text-sm">${t.name.charAt(0)}</div>
+                        <div>
+                            <p class="font-semibold text-navy-800 dark:text-cream-100 text-sm">${t.name}</p>
+                            <p class="text-navy-500 dark:text-cream-400 text-xs">${t.role}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            testimonialsTrack.appendChild(card);
+        });
+
+        const faqContainer = document.getElementById('faqContainer');
+        faqs.forEach((faq, index) => {
+            const item = document.createElement('div');
+            item.className = 'border border-sage-200 dark:border-navy-600 rounded-xl overflow-hidden bg-cream-50 dark:bg-navy-800';
+            item.innerHTML = `
+                <button class="w-full px-6 py-5 text-left flex justify-between items-center gap-4 hover:bg-sage-50 dark:hover:bg-navy-700 transition-colors" aria-expanded="false" aria-controls="faq-${index}" id="faq-btn-${index}">
+                    <span class="font-semibold text-navy-800 dark:text-cream-100">${faq.question}</span>
+                    <svg class="w-5 h-5 text-sage-500 flex-shrink-0 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="faq-${index}" class="hidden px-6 pb-5 text-navy-600 dark:text-cream-300 leading-relaxed" role="region" aria-labelledby="faq-btn-${index}">
+                    ${faq.answer}
+                </div>
+            `;
+            faqContainer.appendChild(item);
+        });
+
+        class Carousel {
+            constructor(trackId, dotsId, prevId, nextId, autoAdvance = false, interval = 5000) {
+                this.track = document.getElementById(trackId);
+                this.dotsContainer = document.getElementById(dotsId);
+                this.prevBtn = document.getElementById(prevId);
+                this.nextBtn = document.getElementById(nextId);
+                this.slides = this.track.children;
+                this.currentIndex = 0;
+                this.autoAdvance = autoAdvance;
+                this.interval = interval;
+                this.timer = null;
+                this.touchStartX = 0;
+                this.touchEndX = 0;
+                this.init();
+            }
+            init() {
+                this.createDots();
+                this.update();
+                this.addListeners();
+                if (this.autoAdvance) this.startTimer();
+            }
+            createDots() {
+                const total = this.slides.length;
+                for (let i = 0; i < total; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === 0 ? 'bg-sage-500 w-8' : 'bg-sage-300 dark:bg-navy-600'}`;
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.addEventListener('click', () => this.goTo(i));
+                    this.dotsContainer.appendChild(dot);
+                }
+            }
+            update() {
+                const slideWidth = this.slides[0].getBoundingClientRect().width;
+                this.track.style.transform = `translateX(-${this.currentIndex * slideWidth}px)`;
+                Array.from(this.dotsContainer.children).forEach((dot, i) => {
+                    dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === this.currentIndex ? 'bg-sage-500 w-8' : 'bg-sage-300 dark:bg-navy-600'}`;
+                });
+            }
+            goTo(index) {
+                const max = this.slides.length - 1;
+                this.currentIndex = Math.max(0, Math.min(index, max));
+                this.update();
+            }
+            next() {
+                const max = this.slides.length - 1;
+                this.currentIndex = this.currentIndex >= max ? 0 : this.currentIndex + 1;
+                this.update();
+            }
+            prev() {
+                const max = this.slides.length - 1;
+                this.currentIndex = this.currentIndex <= 0 ? max : this.currentIndex - 1;
+                this.update();
+            }
+            startTimer() {
+                this.timer = setInterval(() => this.next(), this.interval);
+            }
+            stopTimer() {
+                clearInterval(this.timer);
+            }
+            addListeners() {
+                this.prevBtn.addEventListener('click', () => { this.prev(); if (this.autoAdvance) { this.stopTimer(); this.startTimer(); } });
+                this.nextBtn.addEventListener('click', () => { this.next(); if (this.autoAdvance) { this.stopTimer(); this.startTimer(); } });
+                this.track.addEventListener('touchstart', (e) => { this.touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+                this.track.addEventListener('touchend', (e) => { this.touchEndX = e.changedTouches[0].screenX; this.handleSwipe(); }, { passive: true });
+                if (this.autoAdvance) {
+                    this.track.addEventListener('mouseenter', () => this.stopTimer());
+                    this.track.addEventListener('mouseleave', () => this.startTimer());
+                }
+                window.addEventListener('resize', () => this.update());
+            }
+            handleSwipe() {
+                const diff = this.touchStartX - this.touchEndX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) this.next(); else this.prev();
+                }
+            }
+        }
+
+        const painPointsCarousel = new Carousel('painPointsTrack', 'painPointsDots', 'painPointsPrev', 'painPointsNext', true, 4500);
+        const testimonialsCarousel = new Carousel('testimonialsTrack', 'testimonialsDots', 'testimonialsPrev', 'testimonialsNext', true, 6000);
+
+        const modal = document.getElementById('painPointModal');
+        const modalContent = document.getElementById('modalContent');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalClose = document.getElementById('modalClose');
+        const modalBackdrop = document.getElementById('modalBackdrop');
+
+        function openModal(index) {
+            const point = painPoints[index];
+            modalTitle.textContent = point.title;
+            modalBody.innerHTML = `<p>${point.full}</p><p class="mt-4 text-sage-600 dark:text-sage-400 font-medium">Ready to move past this? <a href="#contact" class="underline" onclick="closeModal()">Book your discovery call →</a></p>`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            modalClose.focus();
+        }
+
+        function closeModal() {
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        modalClose.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', closeModal);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+
+        faqContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('svg');
+            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            faqContainer.querySelectorAll('button').forEach(b => {
+                b.setAttribute('aria-expanded', 'false');
+                b.nextElementSibling.classList.add('hidden');
+                b.querySelector('svg').style.transform = 'rotate(0deg)';
+            });
+            if (!isExpanded) {
+                btn.setAttribute('aria-expanded', 'true');
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        });
+
+        const contactForm = document.getElementById('contactForm');
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const submitBtn = document.getElementById('submitBtn');
+        const formSuccess = document.getElementById('formSuccess');
+
+        termsCheckbox.addEventListener('change', () => {
+            submitBtn.disabled = !termsCheckbox.checked;
+            document.getElementById('termsError').classList.toggle('hidden', termsCheckbox.checked);
+        });
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let valid = true;
+            const fullName = document.getElementById('fullName');
+            if (!fullName.value.trim()) { document.getElementById('fullNameError').classList.remove('hidden'); valid = false; }
+            else { document.getElementById('fullNameError').classList.add('hidden'); }
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value.trim())) { document.getElementById('emailError').classList.remove('hidden'); valid = false; }
+            else { document.getElementById('emailError').classList.add('hidden'); }
+            const challenge = document.getElementById('challenge');
+            if (!challenge.value) { document.getElementById('challengeError').classList.remove('hidden'); valid = false; }
+            else { document.getElementById('challengeError').classList.add('hidden'); }
+            if (!termsCheckbox.checked) { document.getElementById('termsError').classList.remove('hidden'); valid = false; }
+            else { document.getElementById('termsError').classList.add('hidden'); }
+
+            if (valid) {
+                // Disable button & show loading state
+                const btn = document.getElementById('submitBtn');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Sending…';
+
+                fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fullName: fullName.value.trim(),
+                        email: email.value.trim(),
+                        phone: document.getElementById('phone').value.trim(),
+                        challenge: challenge.value,
+                        message: document.getElementById('message').value.trim()
+                    })
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (!data.success) throw new Error(data.error || 'Signup failed');
+                        // Remember who this visitor is so the payment step
+                        // (Join the Program section) knows who paid.
+                        localStorage.setItem('userId', data.userId);
+                        localStorage.setItem('userEmail', email.value.trim());
+
+                        // Success: show stylish modal popup, with different
+                        // messaging if this email had already signed up before
+                        openFormSuccessModal(data.alreadyRegistered);
+                        contactForm.reset();
+                        termsCheckbox.checked = false;
+                        submitBtn.disabled = true;
+                        btn.textContent = originalText;
+                    })
+                    .catch((err) => {
+                        console.error('Signup request failed:', err);
+                        alert('Oops! Something went wrong. Please email us directly at devotedcreators@gmail.com');
+                        btn.disabled = false;
+                        btn.textContent = originalText;
+                    });
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════
+        //  FORM SUCCESS MODAL FUNCTIONS
+        // ═══════════════════════════════════════════════════════════
+        function openFormSuccessModal(alreadyRegistered) {
+            const modal = document.getElementById('formSuccessModal');
+            const content = document.getElementById('formSuccessModalContent');
+            const title = document.getElementById('formSuccessTitle');
+            const message = document.getElementById('formSuccessMessage');
+            const footer = document.getElementById('formSuccessFooter');
+
+            if (alreadyRegistered) {
+                title.textContent = "You're Already on Our List!";
+                message.innerHTML = "We already have your details on file from a previous submission — no need to resubmit.";
+                footer.textContent = "If you haven't received our welcome email yet, please check your spam/junk folder — that's the most common reason it's missed.";
+            } else {
+                title.textContent = 'Thank You!';
+                message.innerHTML = 'Your submission has been received.<br>We\'ll be in touch shortly.';
+                footer.textContent = "A welcome email has been sent to your inbox — if you don't see it in a few minutes, please check your spam/junk folder too.";
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            // Small delay to allow display:block to apply before adding animation class
+            setTimeout(() => {
+                content.classList.remove('scale-90', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100', 'visible');
+            }, 10);
+        }
+
+        function closeFormSuccessModal() {
+            const modal = document.getElementById('formSuccessModal');
+            const content = document.getElementById('formSuccessModalContent');
+            content.classList.remove('scale-100', 'opacity-100', 'visible');
+            content.classList.add('scale-90', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('formSuccessModal');
+                if (!modal.classList.contains('hidden')) closeFormSuccessModal();
+            }
+        });
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const html = document.documentElement;
+
+        function toggleDarkMode() {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            sunIcon.classList.toggle('hidden', !isDark);
+            moonIcon.classList.toggle('hidden', isDark);
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        }
+
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        mobileDarkModeToggle.addEventListener('click', toggleDarkMode);
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', !isOpen);
+        });
+
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        const navbar = document.getElementById('navbar');
+        const scrollToTop = document.getElementById('scrollToTop');
+        const progressBar = document.getElementById('progressBar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) { navbar.classList.add('shadow-md'); } else { navbar.classList.remove('shadow-md'); }
+            if (window.scrollY > 500) { scrollToTop.classList.remove('opacity-0', 'translate-y-10'); } else { scrollToTop.classList.add('opacity-0', 'translate-y-10'); }
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            progressBar.style.width = (scrollTop / docHeight) * 100 + '%';
+        });
+
+        scrollToTop.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, observerOptions);
+        document.querySelectorAll('.fade-in-up, .fade-in').forEach(el => observer.observe(el));
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - offset, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+<!-- ═══════════════════════════════════════════════════════════
+     FORM SUCCESS MODAL  —  Stylish popup after submission
+     ═══════════════════════════════════════════════════════════ -->
+<div id="formSuccessModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="formSuccessTitle">
+    <div class="modal-backdrop absolute inset-0" onclick="closeFormSuccessModal()"></div>
+    <div class="relative bg-white dark:bg-navy-800 rounded-2xl shadow-2xl max-w-md w-full p-8 md:p-10 text-center transform transition-all duration-300 scale-90 opacity-0 border border-sage-100 dark:border-navy-600" id="formSuccessModalContent">
+
+        <!-- Animated checkmark circle -->
+        <div class="w-20 h-20 bg-sage-100 dark:bg-sage-900/30 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+            <div class="absolute inset-0 rounded-full bg-sage-500/20 animate-ping"></div>
+            <svg class="w-10 h-10 text-sage-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="successCheckmark">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" stroke-dasharray="24" stroke-dashoffset="24" style="animation: checkDraw 0.6s ease-out 0.2s forwards;"></path>
+            </svg>
+        </div>
+
+        <h3 id="formSuccessTitle" class="text-2xl md:text-3xl font-bold text-navy-800 dark:text-cream-50 mb-3">Thank You!</h3>
+        <p id="formSuccessMessage" class="text-navy-600 dark:text-cream-300 leading-relaxed text-lg">Your submission has been received.<br>We'll be in touch shortly.</p>
+
+        <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <button onclick="closeFormSuccessModal()" class="bg-sage-500 hover:bg-sage-600 text-white px-8 py-3 rounded-full font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                Got it
+            </button>
+            <a href="#program" onclick="closeFormSuccessModal()" class="border-2 border-sage-500 text-sage-600 dark:text-sage-400 hover:bg-sage-50 dark:hover:bg-navy-700 px-8 py-3 rounded-full font-medium transition-all">
+                Explore Program
+            </a>
+        </div>
+
+        <p id="formSuccessFooter" class="mt-6 text-xs text-navy-400 dark:text-cream-500">A welcome email has been sent to your inbox — if you don't see it in a few minutes, please check your spam/junk folder too.</p>
+    </div>
+</div>
+
+<style>
+    @keyframes checkDraw {
+        to { stroke-dashoffset: 0; }
+    }
+    @keyframes modalPop {
+        0%   { transform: scale(0.9) translateY(20px); opacity: 0; }
+        60%  { transform: scale(1.02) translateY(-4px); opacity: 1; }
+        100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    #formSuccessModalContent.visible {
+        animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+</style>
+
+<script>
+</body>
+</html>
