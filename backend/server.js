@@ -30,7 +30,12 @@ app.use("/", materialsRoute);
 // The `extensions` option lets visitors (and your emails) use clean URLs
 // like /join instead of /join.html — Express tries appending .html
 // automatically if the exact path isn't found.
-app.use(express.static(path.join(__dirname, "../frontend"), { extensions: ["html"] }));
+// frontend/ lives INSIDE backend/, not as a sibling folder. This is
+// required for Railway deployment: when Root Directory is set to
+// /backend, Railway only pulls that folder into the deployment — a
+// sibling ../frontend folder never makes it there at all, which is why
+// this would 404 on Railway even though it works fine locally.
+app.use(express.static(path.join(__dirname, "frontend"), { extensions: ["html"] }));
 
 // Simple health check — useful for confirming the deploy is alive.
 app.get("/health", (req, res) => res.json({ status: "ok" }));
