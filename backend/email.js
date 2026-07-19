@@ -1,31 +1,24 @@
 // email.js
-// All outgoing email goes through this one file, using Gmail's SMTP
-// server. This is the simplest possible setup — no domain DNS records,
-// no MX/SPF/DKIM configuration. Just a Gmail account and an app password.
-// Every send is logged to email_logs so you can see what went out and
-// debug the weekly sequence if something looks off.
+// All outgoing email goes through this one file, using Resend's HTTPS
+// API. Switched from Gmail SMTP because Railway blocks outbound SMTP
+// ports (465/587) on the Free/Hobby plan — Resend sends over HTTPS
+// instead, which is never blocked. Every send is logged to email_logs so
+// you can see what went out and debug the weekly sequence if something
+// looks off.
 //
-// Limits: Gmail caps free accounts at 500 sends/day, which is far more
-// than a new coaching business needs. Emails will show as being from
-// your Gmail address (e.g. yourcoaching@gmail.com) rather than a
-// professional @yourdomain.com address — that's the one tradeoff for
-// skipping the domain email setup. You can switch to a custom-domain
-// sender later without touching any other file in this project.
+// Requires a verified domain in Resend (see README.md "Setting up
+// Resend" for the one-time DNS setup) — you can't send from a plain
+// gmail.com address through Resend, only from a domain you've verified
+// you own.
 
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 const { pool } = require("./db");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const BUSINESS_NAME = process.env.FROM_NAME || "Lovely Connections";
 const COACH_NAME = process.env.COACH_NAME || "Danielle";
-const FROM = `${BUSINESS_NAME} <${process.env.GMAIL_USER}>`;
+const FROM = `${BUSINESS_NAME} <${process.env.RESEND_FROM_EMAIL}>`;
 
 // Wraps every email in the same simple, warm layout so they all feel like
 // they come from the same place, and signs off consistently.
@@ -43,7 +36,18 @@ function layout(bodyHtml, signoff = "Warmly") {
 }
 
 async function send({ to, subject, html, userId, emailType, signoff }) {
-  await transporter.sendMail({ from: FROM, to, subject, html: layout(html, signoff) });
+  const { error } = await resend.emails.send({
+    from: FROM,
+    to,
+    reply_to: process.env.ADMIN_EMAIL,  // ← ADD THIS LINE ONLY
+    subject,
+    html: layout(html, signoff),
+  });
+
+  if (error) {
+    console.error("Resend send error:", error);
+    throw new Error(`Failed to send email: ${error.message || error}`);
+  }
 
   if (userId && emailType) {
     await pool.query(

@@ -9,12 +9,12 @@ alongside your existing `frontend/` folder.
 |---|---|
 | `server.js` | Entry point — wires up routes, static frontend, and the cron job |
 | `db.js` | PostgreSQL connection + creates tables on first run |
-| `email.js` | Sends all emails via Gmail SMTP, logs each send |
+| `email.js` | Sends all emails via Resend's HTTPS API, logs each send |
 | `cron.js` | Daily job that sends the right weekly email to each paying client |
 | `routes/signup.js` | `POST /signup` — creates the user, sends the welcome email |
 | `routes/payment.js` | `POST /payment-submitted` and `GET /confirm-payment` — manual Zelle/Cash App flow |
 | `routes/followup.js` | `GET /send-followup` — one-click "they're joining" / "they need time" emails after a discovery call |
-| `routes/materials.js` | `GET /materials?token=...` — the real access control for your video materials, checked before any Wistia embed is ever sent |
+| `routes/materials.js` | `GET /materials?token=...` + `POST /materials/verify` — token gets you to an email-confirmation gate; the Wistia embed is only ever sent after the typed email matches the token |
 
 ## How payment works (no Stripe)
 
@@ -54,11 +54,28 @@ Generate a random `ADMIN_SECRET`:
 node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"
 ```
 
-### Setting up Gmail sending (2 minutes, no DNS)
+### Setting up Resend (5-10 minutes, one-time DNS setup)
 
-1. Turn on 2-Step Verification: myaccount.google.com/security
-2. Create an app password: myaccount.google.com/apppasswords — choose "Mail," name it anything, copy the 16-character code.
-3. Put your Gmail address in `GMAIL_USER` and that code in `GMAIL_APP_PASSWORD`.
+Switched from Gmail SMTP because Railway blocks outbound SMTP ports
+(465/587) on the Free and Hobby plans — connecting to Gmail would just
+hang forever with no error. Resend sends over HTTPS instead, which
+Railway never blocks.
+
+1. Sign up at resend.com — no credit card needed for the free tier
+   (3,000 emails/month, 100/day, plenty for a new coaching business).
+2. **Add and verify your domain.** Resend → Domains → Add Domain → enter
+   your real domain (e.g. `lovelyconnectionss.com`).
+3. Resend shows you a handful of DNS records (SPF, DKIM, and usually a
+   tracking/return-path record). Add each one in Namecheap → Advanced DNS
+   → Add New Record, exactly as Resend shows them — same pattern as the
+   Railway custom-domain and Zoho setup you've already done.
+4. Back in Resend, click **Verify DNS Records**. This can take anywhere
+   from a few minutes to a few hours to propagate, same as any DNS change.
+5. Once verified, go to **API Keys** → Create API Key. Copy it into
+   `RESEND_API_KEY`.
+6. Set `RESEND_FROM_EMAIL` to any address on your now-verified domain
+   (e.g. `hello@lovelyconnectionss.com`) — it doesn't need to be a real
+   inbox that receives mail, just an address on your verified domain.
 
 ### Setting up materials access (Wistia, token-gated)
 
@@ -80,15 +97,20 @@ together, and what you need to set up once:
 - When you confirm a payment, `routes/payment.js` generates a random,
   unique `access_token` for that client and saves it to their `users` row.
 - Their access email links to `/materials?token=THEIR_TOKEN`.
-- `routes/materials.js` looks up that exact token before rendering
-  anything. No match, no embed — the person literally never receives the
-  Wistia embed code in their browser, so there's nothing to copy or
-  forward that would work for someone else.
+- Opening that link only gets you to an **email confirmation gate** — the
+  token alone isn't enough. The visitor has to type the email address on
+  file, which is checked against the token server-side
+  (`POST /materials/verify`). Only on a match does the server respond
+  with anything about the actual video.
+- This closes the "I forwarded the link to a friend" gap: a friend with
+  the link still doesn't know the client's exact registered email, so
+  they never get past the gate.
 
 **Why this is different from the Drive approach:** Drive's security came
 from Google's own per-account permissions. Wistia doesn't have an
 equivalent, so the access control had to move into your own server
-instead — which is what `access_token` and `routes/materials.js` do.
+instead — the token gets someone to the door, the matching email is what
+actually opens it.
 
 
 ## Calling the API from your frontend
