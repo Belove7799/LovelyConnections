@@ -39,7 +39,6 @@ async function send({ to, subject, html, userId, emailType, signoff }) {
   const { error } = await resend.emails.send({
     from: FROM,
     to,
-    reply_to: process.env.ADMIN_EMAIL,  // ← ADD THIS LINE ONLY
     subject,
     html: layout(html, signoff),
   });
@@ -76,6 +75,10 @@ function sendWelcomeEmail(user) {
       judgment-free space. We'll spend some time talking through what's going on
       for you right now, what you're hoping will feel different, and whether the
       program is a good fit — no pressure either way.</p>
+      <p>I recorded a short (about 14 minutes) audio walkthrough of exactly
+      how the program works — if you'd like a preview before we even talk,
+      <a href="${process.env.FRONTEND_URL}/assets/welcome-audio.mp3" style="color: #4A7043; font-weight: 600;">give it a listen here →</a>
+      (or if you'd rather read it, <a href="${process.env.FRONTEND_URL}/assets/welcome-transcript.pdf" style="color: #4A7043; font-weight: 600;">here's the full written transcript →</a>)</p>
       <p>Just so you have it going in: the full program is a $${price} investment.
       I'd rather you know that up front than be surprised by it on the call — we
       can talk through everything it includes and whether it's the right fit for you.</p>
