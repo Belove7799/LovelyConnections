@@ -2,6 +2,7 @@
 .env
 .env.local
 backend/.env
+test-unconfirmed-reminder.js
 
 # Installed packages — recreated from package.json via `npm install`
 node_modules/

@@ -13,17 +13,20 @@ const signupRoute = require("./routes/signup");
 const paymentRoute = require("./routes/payment");
 const followupRoute = require("./routes/followup");
 const materialsRoute = require("./routes/materials");
+const adminRoute = require("./routes/admin");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // API routes.
 app.use("/", signupRoute);
 app.use("/", paymentRoute);
 app.use("/", followupRoute);
 app.use("/", materialsRoute);
+app.use("/", adminRoute);
 
 // Serve the static frontend (HTML/CSS/JS) — comment this out if you're
 // hosting the frontend as a separate Railway service instead.

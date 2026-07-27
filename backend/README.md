@@ -15,6 +15,34 @@ alongside your existing `frontend/` folder.
 | `routes/payment.js` | `POST /payment-submitted` and `GET /confirm-payment` — manual Zelle/Cash App flow |
 | `routes/followup.js` | `GET /send-followup` — one-click "they're joining" / "they need time" emails after a discovery call |
 | `routes/materials.js` | `GET /materials?token=...` + `POST /materials/verify` — token gets you to an email-confirmation gate; the Wistia embed is only ever sent after the typed email matches the token |
+| `routes/admin.js` | `GET/POST /admin/transfer-access` — bookmarked-link admin tool for lost materials access or email changes |
+
+## Handling unconfirmed payments and lost access
+
+Two things run automatically once deployed, no daily attention needed
+unless they actually trigger:
+
+**Unconfirmed payment reminders.** If a payment claim sits in
+`pending_review` for more than `UNCONFIRMED_PAYMENT_REMINDER_HOURS`
+(default 48 business hours — weekday hours only, weekends don't count
+toward the clock), a daily check automatically:
+- Emails the client asking them to double check or resubmit
+- Emails you a nudge with the same confirm-payment link from the
+  original notification, in case it got buried
+
+This only ever fires once per payment (tracked via
+`reminder_sent_at`) — it won't nag repeatedly.
+
+**Lost materials access / email changes.** Bookmark this URL once,
+with your real `ADMIN_SECRET` in place of the placeholder:
+```
+https://yourdomain.com/admin/transfer-access?key=YOUR_ADMIN_SECRET
+```
+Use it any time a client can't find their materials link, or needs
+their account moved to a new email address. Enter the old email and the
+new one (or the same email twice, to just resend the same client's link)
+and submit. This immediately invalidates the old link and, if they've
+already paid, emails a fresh working one to the new address.
 
 ## How payment works (no Stripe)
 

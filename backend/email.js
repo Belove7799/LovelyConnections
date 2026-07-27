@@ -277,14 +277,59 @@ function sendAdminPaymentNotification({ user, payment, confirmUrl }) {
       matching payment, then click below to grant access. Only click this once
       you've confirmed the money actually arrived.</p>
       <p><a href="${confirmUrl}" style="color: #4A7043; font-weight: 600;">Confirm payment and grant access →</a></p>
-      <p style="margin-top: 20px; padding: 12px; background: #FFF4E5; border-left: 4px solid #E8A33D;">
-        <strong>Two steps after you confirm:</strong><br>
-        1. Share your materials Google Drive folder with <strong>${user.email}</strong> (Share → add as Viewer)<br>
-        2. That's it — the access email above already tells them what to expect.
+      <p style="margin-top: 20px; padding: 12px; background: #F4F7F4; border-left: 4px solid #4A7043;">
+        That's it — clicking confirm automatically generates their personal
+        materials link and emails it to them. Nothing else for you to do.
       </p>
     `,
   });
 }
+
+// ─────────────────────────────────────────────────────────────
+// UNCONFIRMED PAYMENT REMINDER — fires automatically after 48 business
+// hours if a payment claim is still sitting in pending_review
+// ─────────────────────────────────────────────────────────────
+function sendUnconfirmedPaymentReminder(user) {
+  const firstName = (user.full_name || "there").split(" ")[0];
+  const joinUrl = `${process.env.FRONTEND_URL}/join`;
+  return send({
+    to: user.email,
+    subject: "We haven't been able to confirm your payment yet",
+    userId: user.id,
+    emailType: "payment_unconfirmed_reminder",
+    html: `
+      <p>Hi ${firstName},</p>
+      <p>You submitted a payment a couple of days ago, but we haven't been
+      able to confirm it on our end yet. This sometimes happens if the
+      reference details didn't quite match up, or the payment didn't fully
+      go through.</p>
+      <p>Could you take a quick look and either reply to confirm exactly
+      when and how you sent it, or resubmit if something didn't go as
+      planned?</p>
+      <p><a href="${joinUrl}" style="color: #4A7043; font-weight: 600;">Review your payment details →</a></p>
+      <p>No rush or worry either way — just want to make sure this doesn't
+      slip through the cracks for you.</p>
+    `,
+  });
+}
+
+function sendAdminUnconfirmedPaymentNudge({ user, payment, confirmUrl }) {
+  return send({
+    to: process.env.ADMIN_EMAIL,
+    subject: `Reminder: still unconfirmed after 48 business hours — ${user.full_name || user.email}`,
+    html: `
+      <p>${user.full_name || "Someone"} (${user.email}) submitted a payment
+      claim via <strong>${payment.method}</strong> on
+      ${new Date(payment.submitted_at).toLocaleString("en-US")}, and it's
+      still sitting unconfirmed.</p>
+      <p>Reference they gave: <strong>${payment.reference_note || "(none provided)"}</strong></p>
+      <p>They've now also received an automatic reminder email asking them
+      to double check or resubmit.</p>
+      <p><a href="${confirmUrl}" style="color: #4A7043; font-weight: 600;">Confirm payment and grant access →</a></p>
+    `,
+  });
+}
+
 
 // ─────────────────────────────────────────────────────────────
 // NEW LEAD NOTIFICATION — includes one-click links for after the call
@@ -324,4 +369,6 @@ module.exports = {
   sendPaymentSubmittedEmail,
   sendAdminPaymentNotification,
   sendAdminNewLeadNotification,
+  sendUnconfirmedPaymentReminder,
+  sendAdminUnconfirmedPaymentNudge,
 };

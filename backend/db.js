@@ -44,9 +44,12 @@ async function initDb() {
       amount INTEGER,
       status TEXT DEFAULT 'pending_review',  -- pending_review, paid, rejected
       submitted_at TIMESTAMP DEFAULT NOW(),
-      confirmed_at TIMESTAMP
+      confirmed_at TIMESTAMP,
+      reminder_sent_at TIMESTAMP
     );
   `);
+
+  await pool.query(`ALTER TABLE payments ADD COLUMN IF NOT EXISTS reminder_sent_at TIMESTAMP;`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS progress (
