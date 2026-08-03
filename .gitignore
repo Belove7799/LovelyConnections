@@ -3,6 +3,7 @@
 .env.local
 backend/.env
 test-unconfirmed-reminder.js
+test-broadcast.js
 
 # Installed packages — recreated from package.json via `npm install`
 node_modules/

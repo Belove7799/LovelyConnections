@@ -52,6 +52,16 @@ async function initDb() {
   await pool.query(`ALTER TABLE payments ADD COLUMN IF NOT EXISTS reminder_sent_at TIMESTAMP;`);
 
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS session_feedback (
+      id SERIAL PRIMARY KEY,
+      full_name TEXT,
+      email TEXT NOT NULL,
+      message TEXT NOT NULL,
+      submitted_at TIMESTAMP DEFAULT NOW()
+    );
+  `);
+
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS progress (
       id SERIAL PRIMARY KEY,
       user_id INTEGER UNIQUE REFERENCES users(id),

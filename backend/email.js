@@ -359,6 +359,111 @@ function sendAdminNewLeadNotification(user) {
   });
 }
 
+// ─────────────────────────────────────────────────────────────
+// SESSION FEEDBACK / PRIVATE QUESTIONS — the form clients use after a
+// Live Session to share feedback or ask something they didn't want to
+// ask in front of the group
+// ─────────────────────────────────────────────────────────────
+function sendFeedbackAcknowledgment({ full_name, email }) {
+  const firstName = (full_name || "there").split(" ")[0];
+  return send({
+    to: email,
+    subject: "Got your message",
+    html: `
+      <p>Hi ${firstName},</p>
+      <p>Thank you for reaching out — I've received your message and will
+      follow up with you personally.</p>
+      <p>If it's time-sensitive, feel free to reply directly to this email
+      too.</p>
+    `,
+  });
+}
+
+function sendAdminFeedbackNotification({ full_name, email, message }) {
+  return send({
+    to: process.env.ADMIN_EMAIL,
+    subject: `New feedback/question from ${full_name || email}`,
+    html: `
+      <p><strong>${full_name || "Someone"}</strong> (${email}) shared this
+      after a Live Session:</p>
+      <p style="padding: 12px; background: #F4F7F4; border-left: 4px solid #4A7043;">${message}</p>
+      <p>Reply directly to ${email} to respond — this notification is a
+      copy for you, not a reply-to thread.</p>
+    `,
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// BROADCAST — sends one message to every currently active client at
+// once, using Resend's batch endpoint (not a loop of individual sends,
+// which would hit Resend's 2-requests/second rate limit almost
+// immediately). Used for both the weekly Live Session/Q&A announcement
+// and last-minute reschedule notices — same mechanism, different template.
+// ─────────────────────────────────────────────────────────────
+
+function buildLiveSessionAnnouncementBody(firstName, details) {
+  return `
+    <p>Hi ${firstName},</p>
+    <p>Here are this week's Live Session / Q&A details:</p>
+    <p>
+      <strong>Date:</strong> ${details.date}<br>
+      <strong>Time:</strong> ${details.time}<br>
+      <strong>Join link:</strong> <a href="${details.link}" style="color: #4A7043; font-weight: 600;">${details.link}</a>
+    </p>
+    ${details.note ? `<p><strong>This week's focus:</strong> ${details.note}</p>` : ""}
+    <p>Bring your questions — this is your time to ask anything you'd
+    rather not put in the group chat, too. And if you'd rather share
+    something privately beforehand, ${process.env.FRONTEND_URL}/feedback
+    always reaches me directly.</p>
+    <p>See you there!</p>
+  `;
+}
+
+function buildRescheduleNoticeBody(firstName, details) {
+  return `
+    <p>Hi ${firstName},</p>
+    <p>A quick heads up — this week's Live Session/Q&A needs to move.</p>
+    ${details.reason ? `<p>${details.reason}</p>` : ""}
+    <p>
+      <strong>New date:</strong> ${details.date}<br>
+      <strong>New time:</strong> ${details.time}
+      ${details.link ? `<br><strong>Join link:</strong> <a href="${details.link}" style="color: #4A7043; font-weight: 600;">${details.link}</a>` : ""}
+    </p>
+    <p>Sorry for the shuffle — see you at the new time!</p>
+  `;
+}
+
+// Sends one email per active client via Resend's batch API (up to 100 per
+// call — chunked automatically if you ever have more active clients than
+// that at once). Returns how many were actually sent.
+async function sendBroadcast(users, buildBodyFn, subject, details) {
+  const emails = users.map((user) => {
+    const firstName = (user.full_name || "there").split(" ")[0];
+    return {
+      from: FROM,
+      to: user.email,
+      subject,
+      html: layout(buildBodyFn(firstName, details), "Warmly"),
+    };
+  });
+
+  const chunks = [];
+  for (let i = 0; i < emails.length; i += 100) {
+    chunks.push(emails.slice(i, i + 100));
+  }
+
+  let sentCount = 0;
+  for (const chunk of chunks) {
+    const { data, error } = await resend.batch.send(chunk);
+    if (error) {
+      console.error("Batch send error:", error);
+      throw new Error(`Batch send failed: ${error.message || error}`);
+    }
+    sentCount += chunk.length;
+  }
+  return sentCount;
+}
+
 module.exports = {
   sendWelcomeEmail,
   sendCallJoinEmail,
@@ -371,4 +476,10 @@ module.exports = {
   sendAdminNewLeadNotification,
   sendUnconfirmedPaymentReminder,
   sendAdminUnconfirmedPaymentNudge,
+  sendFeedbackAcknowledgment,
+  sendAdminFeedbackNotification,
+  sendBroadcast,
+  buildLiveSessionAnnouncementBody,
+  buildRescheduleNoticeBody,
 };
+

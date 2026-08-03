@@ -12,7 +12,7 @@ const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
 const { pool } = require("../db");
-const { sendAccessEmail } = require("../email");
+const { sendAccessEmail, sendBroadcast, buildLiveSessionAnnouncementBody, buildRescheduleNoticeBody } = require("../email");
 
 function checkKey(key) {
   const expected = String(process.env.ADMIN_SECRET || "");
@@ -143,6 +143,100 @@ router.post("/admin/transfer-access", async (req, res) => {
   } catch (err) {
     console.error("Transfer-access error:", err);
     res.status(500).send(page("<h1>Something went wrong</h1><div class=\"result err\">Check the server logs for details.</div>"));
+  }
+});
+
+// ═════════════════════════════════════════════════════════════
+// BROADCAST — send the weekly Live Session/Q&A details, or a reschedule
+// notice, to every currently active client (paid, not yet completed) at
+// once. Uses the same bookmarked-link pattern as transfer-access above.
+// ═════════════════════════════════════════════════════════════
+
+router.get("/admin/broadcast", (req, res) => {
+  const { key } = req.query;
+  if (!checkKey(key)) {
+    return res.status(403).send(page("<h1>Not authorized</h1><p>Missing or incorrect key.</p>"));
+  }
+
+  res.send(page(`
+    <h1>Send Announcement to Active Clients</h1>
+    <p>Sends to everyone currently active in the program (paid, not yet
+    completed). Choose which kind of announcement this is — the fields
+    below change to match.</p>
+    <form method="POST" action="/admin/broadcast">
+      <input type="hidden" name="key" value="${key}">
+
+      <label for="type">Announcement type</label>
+      <select name="type" id="type" onchange="toggleFields()" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e0; font-size:14px;">
+        <option value="session">Weekly Live Session / Q&A details</option>
+        <option value="reschedule">Reschedule notice</option>
+      </select>
+
+      <div id="sessionFields">
+        <label for="date">Date</label>
+        <input type="text" name="date" placeholder="e.g. Thursday, August 6">
+        <label for="time">Time</label>
+        <input type="text" name="time" placeholder="e.g. 7:00 PM CST">
+        <label for="link">Join link</label>
+        <input type="text" name="link" placeholder="Zoom link">
+        <label for="note">This week's focus (optional)</label>
+        <input type="text" name="note" placeholder="Optional topic/agenda note">
+      </div>
+
+      <div id="rescheduleFields" style="display:none;">
+        <label for="rDate">New date</label>
+        <input type="text" name="rDate" placeholder="e.g. Sunday, August 9">
+        <label for="rTime">New time</label>
+        <input type="text" name="rTime" placeholder="e.g. 3:00 PM CST">
+        <label for="rLink">Join link (optional, if it changed)</label>
+        <input type="text" name="rLink" placeholder="Zoom link">
+        <label for="reason">Reason (optional)</label>
+        <input type="text" name="reason" placeholder="e.g. Something came up on my end this week">
+      </div>
+
+      <button type="submit">Send to All Active Clients</button>
+    </form>
+    <script>
+      function toggleFields() {
+        const type = document.getElementById('type').value;
+        document.getElementById('sessionFields').style.display = type === 'session' ? 'block' : 'none';
+        document.getElementById('rescheduleFields').style.display = type === 'reschedule' ? 'block' : 'none';
+      }
+    </script>
+  `));
+});
+
+router.post("/admin/broadcast", async (req, res) => {
+  const { key, type } = req.body || {};
+  if (!checkKey(key)) {
+    return res.status(403).send(page("<h1>Not authorized</h1><p>Missing or incorrect key.</p>"));
+  }
+
+  try {
+    const activeResult = await pool.query(`
+      SELECT u.* FROM users u
+      JOIN progress p ON p.user_id = u.id
+      WHERE p.completed = FALSE
+    `);
+    const activeUsers = activeResult.rows;
+
+    if (activeUsers.length === 0) {
+      return res.send(page(`<h1>No active clients</h1><div class="result err">There's currently no one active in the program to send to.</div>`));
+    }
+
+    let sentCount;
+    if (type === "reschedule") {
+      const details = { date: req.body.rDate, time: req.body.rTime, link: req.body.rLink, reason: req.body.reason };
+      sentCount = await sendBroadcast(activeUsers, buildRescheduleNoticeBody, "Live Session/Q&A Update — Schedule Change", details);
+    } else {
+      const details = { date: req.body.date, time: req.body.time, link: req.body.link, note: req.body.note };
+      sentCount = await sendBroadcast(activeUsers, buildLiveSessionAnnouncementBody, "This Week's Live Session / Q&A Details", details);
+    }
+
+    res.send(page(`<h1>Sent!</h1><div class="result ok">Announcement sent to ${sentCount} active client(s).</div>`));
+  } catch (err) {
+    console.error("Broadcast error:", err);
+    res.status(500).send(page(`<h1>Something went wrong</h1><div class="result err">Check the server logs for details.</div>`));
   }
 });
 
